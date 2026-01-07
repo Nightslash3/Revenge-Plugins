@@ -3,7 +3,7 @@
     "description": "Removes Discord's 10 image upload limit by automatically batching uploads",
     "authors": [
         {
-            "name": "Nightslash3"
+            "name": "Deltxyz"
         }
     ],
     "main": "index.js"
