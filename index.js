@@ -1,4 +1,4 @@
-(()=>{const { findByProps } = vendetta.metro;
+const { findByProps } = vendetta.metro;
 const { after } = vendetta.patcher;
 const { showToast } = vendetta.ui.toasts;
 
@@ -41,33 +41,31 @@ async function uploadInBatches(channelId, files, messageContent) {
   return true;
 }
 
-return {
-  onLoad: () => {
-    const UploadModule = findByProps("uploadFiles");
+export function onLoad() {
+  const UploadModule = findByProps("uploadFiles");
+  
+  unpatch = after("uploadFiles", UploadModule, async (args, result) => {
+    const [uploadData] = args;
+    const { files, channelId } = uploadData;
     
-    unpatch = after("uploadFiles", UploadModule, async (args, result) => {
-      const [uploadData] = args;
-      const { files, channelId } = uploadData;
+    if (files && files.length > 10) {
+      const messageContent = uploadData.parsedMessage?.content || "";
       
-      if (files && files.length > 10) {
-        const messageContent = uploadData.parsedMessage?.content || "";
-        
-        showToast(`Uploading ${files.length} images in batches...`, 0);
-        
-        const success = await uploadInBatches(channelId, files, messageContent);
-        
-        if (success) {
-          showToast(`Successfully uploaded all ${files.length} images!`, 1);
-        }
-        
-        return null;
+      showToast(`Uploading ${files.length} images in batches...`, 0);
+      
+      const success = await uploadInBatches(channelId, files, messageContent);
+      
+      if (success) {
+        showToast(`Successfully uploaded all ${files.length} images!`, 1);
       }
       
-      return result;
-    });
-  },
-  onUnload: () => {
-    unpatch?.();
-  }
-};
-})()
+      return null;
+    }
+    
+    return result;
+  });
+}
+
+export function onUnload() {
+  unpatch?.();
+}
