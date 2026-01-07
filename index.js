@@ -1,7 +1,3 @@
-const { findByProps } = vendetta.metro;
-const { after } = vendetta.patcher;
-const { showToast } = vendetta.ui.toasts;
-
 let unpatch;
 
 function chunkArray(array, size) {
@@ -13,6 +9,8 @@ function chunkArray(array, size) {
 }
 
 async function uploadInBatches(channelId, files, messageContent) {
+  const { findByProps } = vendetta.metro;
+  const { showToast } = vendetta.ui.toasts;
   const UploadModule = findByProps("uploadFiles");
   const chunks = chunkArray(files, 10);
   
@@ -41,31 +39,35 @@ async function uploadInBatches(channelId, files, messageContent) {
   return true;
 }
 
-export function onLoad() {
-  const UploadModule = findByProps("uploadFiles");
-  
-  unpatch = after("uploadFiles", UploadModule, async (args, result) => {
-    const [uploadData] = args;
-    const { files, channelId } = uploadData;
+module.exports = {
+  onLoad: () => {
+    const { findByProps } = vendetta.metro;
+    const { after } = vendetta.patcher;
+    const { showToast } = vendetta.ui.toasts;
+    const UploadModule = findByProps("uploadFiles");
     
-    if (files && files.length > 10) {
-      const messageContent = uploadData.parsedMessage?.content || "";
+    unpatch = after("uploadFiles", UploadModule, async (args, result) => {
+      const [uploadData] = args;
+      const { files, channelId } = uploadData;
       
-      showToast(`Uploading ${files.length} images in batches...`, 0);
-      
-      const success = await uploadInBatches(channelId, files, messageContent);
-      
-      if (success) {
-        showToast(`Successfully uploaded all ${files.length} images!`, 1);
+      if (files && files.length > 10) {
+        const messageContent = uploadData.parsedMessage?.content || "";
+        
+        showToast(`Uploading ${files.length} images in batches...`, 0);
+        
+        const success = await uploadInBatches(channelId, files, messageContent);
+        
+        if (success) {
+          showToast(`Successfully uploaded all ${files.length} images!`, 1);
+        }
+        
+        return null;
       }
       
-      return null;
-    }
-    
-    return result;
-  });
-}
-
-export function onUnload() {
-  unpatch?.();
-}
+      return result;
+    });
+  },
+  onUnload: () => {
+    unpatch?.();
+  }
+};
