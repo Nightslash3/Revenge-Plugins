@@ -1,13 +1,10 @@
 {
     "name": "Better Image Upload",
-    "description": "Removes Discord's image upload limit by batching uploads. :3",
+    "description": "Removes Discord's 10 image upload limit by automatically batching uploads",
     "authors": [
         {
-            "name": "DeltXYZ"
+            "name": "Nightslash3"
         }
     ],
-    "main": "index.js",
-    "vendetta": {
-        "required": true
-    }
+    "main": "index.js"
 }

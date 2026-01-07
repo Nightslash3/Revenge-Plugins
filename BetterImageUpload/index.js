@@ -1,6 +1,6 @@
-import { findByProps } from "@vendetta/metro";
-import { before } from "@vendetta/patcher";
-import { showToast } from "@vendetta/ui/toasts";
+import { findByProps } from "@revenge-mod/modules/finders";
+import { before } from "@revenge-mod/patcher";
+import { showToast } from "@revenge-mod/ui/toasts";
 
 const uploadModule = findByProps("uploadFiles");
 
