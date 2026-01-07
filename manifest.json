@@ -1,0 +1,13 @@
+{
+  "name": "Better Image Upload",
+  "description": "Removes Discord's 10 image upload restriction by uploading in batches",
+  "authors": [
+    {
+      "name": "jawan"
+    }
+  ],
+  "main": "index.js",
+  "vendetta": {
+    "icon": "ImagePlus"
+  }
+}
