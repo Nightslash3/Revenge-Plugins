@@ -1,4 +1,4 @@
-const { findByProps } = vendetta.metro;
+(()=>{const { findByProps } = vendetta.metro;
 const { after } = vendetta.patcher;
 const { showToast } = vendetta.ui.toasts;
 
@@ -41,7 +41,7 @@ async function uploadInBatches(channelId, files, messageContent) {
   return true;
 }
 
-export default {
+return {
   onLoad: () => {
     const UploadModule = findByProps("uploadFiles");
     
@@ -70,3 +70,4 @@ export default {
     unpatch?.();
   }
 };
+})()
